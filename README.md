@@ -135,13 +135,13 @@ python -c "from modern_example_usage import ModernGenerator, ModernScriptRNN; fr
 
 ## 📂 Project Structure
 
-📁 data/ # Your datasets
-📄 main_modern.py # Entrypoint for training/generation
-📄 improved_helperAI.py # Preprocessing, loading, saving
-📄 modern_example_usage.py # Model architecture, training, generation logic
-📄 modern_plot.py # Plotting helper functions
-📄 test_modern.py # Unit tests
-📄 requirements.txt # Dependencies
+1. 📁 data/ # Your datasets
+2. 📄 main_modern.py # Entrypoint for training/generation
+3. 📄 improved_helperAI.py # Preprocessing, loading, saving
+4. 📄 modern_example_usage.py # Model architecture, training, generation logic
+5. 📄 modern_plot.py # Plotting helper functions
+6. 📄 test_modern.py # Unit tests
+7. 📄 requirements.txt # Dependencies
 
 ---
 
