@@ -1,0 +1,105 @@
+# =====================
+# Python cache / build
+# =====================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Unit test / coverage
+.pytest_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+
+# =====================
+# Virtual environments
+# =====================
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+
+# =====================
+# OS-specific files
+# =====================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# =====================
+# IDE / Editor files
+# =====================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =====================
+# Project-specific ignores
+# =====================
+
+# Logs & checkpoints
+*.log
+training.log
+*.ckpt
+
+# Preprocessed data
+*.pkl
+*.pickle
+*.p
+*.npz
+
+# Model weights
+*.pt
+*.pth
+model/
+checkpoints/
+models/
+
+# Generated plots
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.pdf
+plots/
+
+# Hugging Face cache
+.cache/
+transformers_cache/
+datasets_cache/
+
+# Temporary files
+*.tmp
+*.temp
+
+# =====================
+# Data files
+# =====================
+
+# Ignore large data except sample datasets
+data/*
+!data/sample.csv
+!data/sample.xlsx
+!data/Game_of_Thrones_Script.csv  # keep small example dataset
+
+# =====================
+# Local configs
+# =====================
+*.env
+.env.*
+config.yaml
+config.json
