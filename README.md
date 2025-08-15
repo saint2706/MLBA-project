@@ -34,27 +34,31 @@ This project features:
 
 Clone this repository:
 
-> git clone https://github.com/yourusername/tv-script-generation.git
-
-> cd tv-script-generation
+```sh
+git clone https://github.com/yourusername/tv-script-generation.git
+cd tv-script-generation
+```
 
 Optional but **recommended**: Create a virtual environment:
 
-> python -m venv venv
-
-> .\venv\Scripts\Activate
+```sh
+python -m venv venv
+.\venv\Scripts\Activate
+```
 
 Install dependencies from `requirements.txt`:
 
-> pip install -U pip
-
-> pip install -r requirements.txt
+```sh
+pip install -U pip
+pip install -r requirements.txt
+```
 
 If you don’t have `requirements.txt`, install essentials manually:
 
-> pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-> pip install transformers datasets sentencepiece pandas numpy plotly kaleido pytest
+```sh
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install transformers datasets sentencepiece pandas numpy plotly kaleido pytest
+```
 
 ---
 
@@ -66,26 +70,33 @@ Here’s an **easy step-by-step** guide for **beginners**:
 - Press **Start**, search for `PowerShell` or `Windows Terminal` (PowerShell tab)
 - Change to your project folder:
 
-> cd "C:\Path\To\project-tv-script-generation"
+```sh
+cd "C:\Path\To\project-tv-script-generation"
+```
 
 ### **2️⃣ Create & Activate a Virtual Environment**
 
-> python -m venv venv
+```sh
+python -m venv venv
+.\venv\Scripts\Activate
+```
 
-> .\venv\Scripts\Activate
 You should see `(venv)` before your PowerShell prompt.
 
 ### **3️⃣ Install packages**
 
-> pip install -U pip
-
-> pip install -r requirements.txt
+```sh
+pip install -U pip
+pip install -r requirements.txt
+```
 
 ### **4️⃣ Verify Python & CUDA**
 
-> python --version
+```sh
+python --version
+python -c "import torch; print(torch.version); print('CUDA available:', torch.cuda.is_available())"
+```
 
-> python -c "import torch; print(torch.version); print('CUDA available:', torch.cuda.is_available())"
 `CUDA available: True` means GPU is ready.
 
 ### **5️⃣ Preprocess Dataset**
@@ -93,11 +104,16 @@ Ensure your dataset is in `data/` and matches the `DATA_PATH` in `main_modern.py
 
 To check dataset stats:
 
-> python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset('data/Game_of_Thrones_Script.csv'))"
+```sh
+python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset('data/Game_of_Thrones_Script.csv'))"
+```
 
 ### **6️⃣ Train & Generate Dialogue**
 
-> python main_modern.py
+```sh
+python main_modern.py
+```
+
 This will:
 - Preprocess data → `preprocess_modern.pkl`
 - Train model → save to `modern_script_model.pt`
@@ -105,11 +121,15 @@ This will:
 
 ### **7️⃣ Plot Training Metrics (Optional)**
 
-> python -c "from modern_plot import parse_log_file, plot_training_metrics; recs = parse_log_file('train.log'); plot_training_metrics(recs, metrics=['loss','lr'])"
+```sh
+python -c "from modern_plot import parse_log_file, plot_training_metrics; recs = parse_log_file('train.log'); plot_training_metrics(recs, metrics=['loss','lr'])"
+```
 
 ### **8️⃣ Generate Without Retraining**
 
-> python -c "from modern_example_usage import ModernGenerator, ModernScriptRNN; from improved_helperAI import load_modern_model, load_modern_preprocess, ModernTextProcessor; pre = load_modern_preprocess('preprocess_modern.pkl'); model, _ = load_modern_model('modern_script_model', ModernScriptRNN, vocab_size=pre['metadata']['vocab_size'], output_size=pre['metadata']['vocab_size'], embedding_dim=256, hidden_dim=512, n_layers=2, characters=pre['metadata']['characters']); gen = ModernGenerator(model, pre['vocab_to_int'], pre['int_to_vocab'], pre['character_vocab'], tokenizer=ModernTextProcessor('gpt2', 'gpt2').tokenizer); print(gen.generate_nucleus_sampling('jon snow:', 100, character='jon snow'))"
+```sh
+python -c "from modern_example_usage import ModernGenerator, ModernScriptRNN; from improved_helperAI import load_modern_model, load_modern_preprocess, ModernTextProcessor; pre = load_modern_preprocess('preprocess_modern.pkl'); model, _ = load_modern_model('modern_script_model', ModernScriptRNN, vocab_size=pre['metadata']['vocab_size'], output_size=pre['metadata']['vocab_size'], embedding_dim=256, hidden_dim=512, n_layers=2, characters=pre['metadata']['characters']); gen = ModernGenerator(model, pre['vocab_to_int'], pre['int_to_vocab'], pre['character_vocab'], tokenizer=ModernTextProcessor('gpt2', 'gpt2').tokenizer); print(gen.generate_nucleus_sampling('jon snow:', 100, character='jon snow'))"
+```
 
 ---
 
