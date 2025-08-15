@@ -170,8 +170,18 @@ def analyze_got_data():
         print("💡 Make sure your data file exists at:", DATA_PATH)
         return None
 
-# Run the analysis
-analysis_results = analyze_got_data()
+# ================================================================
+# 🚀 MAIN EXECUTION (Protected with multiprocessing guard)
+# FOR NON-PROGRAMMERS: This prevents Windows multiprocessing issues
+# ================================================================
+
+if __name__ == '__main__':
+    # Add multiprocessing freeze_support for Windows compatibility
+    import multiprocessing
+    multiprocessing.freeze_support()
+    
+    # Run the analysis
+    analysis_results = analyze_got_data()
 
 # ================================================================
 # 📝 STEP 2: DATA PREPROCESSING (Preparing text for AI training)
@@ -225,12 +235,12 @@ def preprocess_got_data():
         print("💡 Check your data file format and try again")
         return None
 
-# Run preprocessing
-preprocessed_data = preprocess_got_data()
+    # Run preprocessing
+    preprocessed_data = preprocess_got_data()
 
-if preprocessed_data is None:
-    print("❌ Cannot continue without preprocessed data. Please fix the issues above.")
-    exit(1)
+    if preprocessed_data is None:
+        print("❌ Cannot continue without preprocessed data. Please fix the issues above.")
+        exit(1)
 
 # ================================================================
 # 🔧 STEP 3: PREPARE DATA FOR TRAINING (Creating AI-friendly data batches)
@@ -264,12 +274,17 @@ def prepare_training_data(preprocessed_data):
         
         # Create dataset and dataloader
         tensor_data = TensorDataset(data_x, data_y)
+        
+        # Set num_workers based on platform (Windows requires 0 to avoid multiprocessing issues)
+        import platform
+        num_workers = 0 if platform.system() == 'Windows' else 2
+        
         train_loader = DataLoader(
             tensor_data, 
             batch_size=BATCH_SIZE, 
             shuffle=True, 
             pin_memory=True if DEVICE.type == 'cuda' else False,
-            num_workers=2  # Parallel data loading for speed
+            num_workers=num_workers  # Platform-safe parallel data loading
         )
         
         print(f"✅ Created {len(train_loader)} training batches")
@@ -280,11 +295,11 @@ def prepare_training_data(preprocessed_data):
         print(f"❌ Error preparing training data: {e}")
         return None
 
-train_loader = prepare_training_data(preprocessed_data)
+    train_loader = prepare_training_data(preprocessed_data)
 
-if train_loader is None:
-    print("❌ Cannot continue without training data. Please fix the issues above.")
-    exit(1)
+    if train_loader is None:
+        print("❌ Cannot continue without training data. Please fix the issues above.")
+        exit(1)
 
 # ================================================================
 # 🧠 STEP 4: MODEL INITIALIZATION (Creating the AI brain)
@@ -345,11 +360,11 @@ def create_ai_model(preprocessed_data):
         print(f"❌ Error creating model: {e}")
         return None, None, None
 
-model, vocab_size, characters = create_ai_model(preprocessed_data)
+    model, vocab_size, characters = create_ai_model(preprocessed_data)
 
-if model is None:
-    print("❌ Cannot continue without a valid model. Please fix the issues above.")
-    exit(1)
+    if model is None:
+        print("❌ Cannot continue without a valid model. Please fix the issues above.")
+        exit(1)
 
 # ================================================================
 # 🎓 STEP 5: TRAINING SETUP (Preparing the AI teacher)
@@ -386,18 +401,18 @@ def setup_trainer(model, train_loader, preprocessed_data):
         print(f"❌ Error setting up trainer: {e}")
         return None
 
-trainer = setup_trainer(model, train_loader, preprocessed_data)
+    trainer = setup_trainer(model, train_loader, preprocessed_data)
 
-if trainer is None:
-    print("❌ Cannot continue without a trainer. Please fix the issues above.")
-    exit(1)
+    if trainer is None:
+        print("❌ Cannot continue without a trainer. Please fix the issues above.")
+        exit(1)
 
 # ================================================================
 # 🚀 STEP 6: MAIN TRAINING LOOP (Teaching the AI)
 # FOR NON-PROGRAMMERS: This is where the actual learning happens!
 # ================================================================
 
-def train_ai_model(trainer, num_epochs):
+def train_ai_model(trainer, num_epochs, model, preprocessed_data, vocab_size, characters):
     """
     🚀 Train the AI model
     
@@ -553,86 +568,86 @@ def train_ai_model(trainer, num_epochs):
         logger.error(f"❌ Training error: {e}")
         return training_losses, best_loss
 
-# Start training
-training_losses, final_best_loss = train_ai_model(trainer, NUM_EPOCHS)
+    # Start training
+    training_losses, final_best_loss = train_ai_model(trainer, NUM_EPOCHS, model, preprocessed_data, vocab_size, characters)
 
-# ================================================================
-# 8. Save Model
-# ================================================================
-metadata = {
-    "dataset": os.path.basename(DATA_PATH),
-    "tokenizer": TOKENIZER_TYPE,
-    "context_window": CONTEXT_WINDOW,
-}
-save_modern_model(
-    MODEL_SAVE_PATH, model, optimizer=trainer.optimizer, metadata=metadata
-)
+    # ================================================================
+    # 8. Save Model
+    # ================================================================
+    metadata = {
+        "dataset": os.path.basename(DATA_PATH),
+        "tokenizer": TOKENIZER_TYPE,
+        "context_window": CONTEXT_WINDOW,
+    }
+    save_modern_model(
+        MODEL_SAVE_PATH, model, optimizer=trainer.optimizer, metadata=metadata
+    )
 
-# ================================================================
-# 9. Load Model for Generation
-# ================================================================
-loaded_model, load_meta = load_modern_model(
-    MODEL_SAVE_PATH,
-    ModernScriptRNN,
-    vocab_size=vocab_size,
-    output_size=vocab_size,
-    embedding_dim=EMBEDDING_DIM,
-    hidden_dim=HIDDEN_DIM,
-    n_layers=NUM_LAYERS,
-    characters=characters,
-)
-loaded_model.to(DEVICE) # type: ignore
+    # ================================================================
+    # 9. Load Model for Generation
+    # ================================================================
+    loaded_model, load_meta = load_modern_model(
+        MODEL_SAVE_PATH,
+        ModernScriptRNN,
+        vocab_size=vocab_size,
+        output_size=vocab_size,
+        embedding_dim=EMBEDDING_DIM,
+        hidden_dim=HIDDEN_DIM,
+        n_layers=NUM_LAYERS,
+        characters=characters,
+    )
+    loaded_model.to(DEVICE) # type: ignore
 
-# ================================================================
-# 10. Generation
-# ================================================================
-generator = ModernGenerator(
-    model=loaded_model,
-    vocab_to_int=preprocessed_data["vocab_to_int"],
-    int_to_vocab=preprocessed_data["int_to_vocab"],
-    character_vocab=preprocessed_data["character_vocab"],
-    tokenizer=ModernTextProcessor(TOKENIZER_TYPE, MODEL_NAME).tokenizer,
-)
+    # ================================================================
+    # 10. Generation
+    # ================================================================
+    generator = ModernGenerator(
+        model=loaded_model,
+        vocab_to_int=preprocessed_data["vocab_to_int"],
+        int_to_vocab=preprocessed_data["int_to_vocab"],
+        character_vocab=preprocessed_data["character_vocab"],
+        tokenizer=ModernTextProcessor(TOKENIZER_TYPE, MODEL_NAME).tokenizer,
+    )
 
-script = generator.generate_nucleus_sampling(
-    seed_text="jon snow:",
-    max_length=200,
-    top_p=0.9,
-    temperature=0.8,
-    character="jon snow",
-)
-print(script)
+    script = generator.generate_nucleus_sampling(
+        seed_text="jon snow:",
+        max_length=200,
+        top_p=0.9,
+        temperature=0.8,
+        character="jon snow",
+    )
+    print(script)
 
-print("\n✅ Script generation complete.")
+    print("\n✅ Script generation complete.")
 
-# ================================================================
-# 📊 CREATE TRAINING VISUALIZATIONS (Show progress graphs)
-# FOR NON-PROGRAMMERS: Make pretty charts showing how well our AI learned
-# ================================================================
+    # ================================================================
+    # 📊 CREATE TRAINING VISUALIZATIONS (Show progress graphs)
+    # FOR NON-PROGRAMMERS: Make pretty charts showing how well our AI learned
+    # ================================================================
 
-print("\n📊 Creating training progress visualizations...")
-try:
-    from modern_plot import quick_dashboard
-    quick_dashboard()
-    print("✅ Training visualizations created! Check the generated .html files")
-except Exception as e:
-    print(f"⚠️ Could not create visualizations: {e}")
+    print("\n📊 Creating training progress visualizations...")
+    try:
+        from modern_plot import quick_dashboard
+        quick_dashboard()
+        print("✅ Training visualizations created! Check the generated .html files")
+    except Exception as e:
+        print(f"⚠️ Could not create visualizations: {e}")
 
-print("\n" + "🏁 MAIN SCRIPT COMPLETE!" + "\n")
-print("=" * 60)
-print("🎉 Your Game of Thrones AI script generator is ready!")
-print()
-print("📁 Generated Files:")
-print("   🤖 Trained AI model")  
-print("   📊 Training visualizations")
-print("   📈 Performance graphs")
-print("   📝 Sample generated dialogue")
-print()
-print("🚀 Next Steps:")
-print("   1. Check the sample dialogue generated above")
-print("   2. Open the .html visualization files in your browser")  
-print("   3. Experiment with different character prompts")
-print("   4. Adjust creativity settings (temperature, top_p)")
-print("   5. Generate longer or shorter dialogue snippets")
-print()
-print("🎭 Have fun with your AI Game of Thrones writer! 🐉⚔️👑")
+    print("\n" + "🏁 MAIN SCRIPT COMPLETE!" + "\n")
+    print("=" * 60)
+    print("🎉 Your Game of Thrones AI script generator is ready!")
+    print()
+    print("📁 Generated Files:")
+    print("   🤖 Trained AI model")  
+    print("   📊 Training visualizations")
+    print("   📈 Performance graphs")
+    print("   📝 Sample generated dialogue")
+    print()
+    print("🚀 Next Steps:")
+    print("   1. Check the sample dialogue generated above")
+    print("   2. Open the .html visualization files in your browser")  
+    print("   3. Experiment with different character prompts")
+    print("   4. Adjust creativity settings (temperature, top_p)")
+    print("   5. Generate longer or shorter dialogue snippets")
+    print()
+    print("🎭 Have fun with your AI Game of Thrones writer! 🐉⚔️👑")
