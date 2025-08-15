@@ -1,105 +1,331 @@
-# =====================
-# Python cache / build
-# =====================
+# ==========================================
+# Game of Thrones AI - Professional .gitignore
+# ==========================================
+
+# ==========================================
+# PYTHON GENERATED FILES
+# ==========================================
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
+# C extensions
+*.so
+
 # Distribution / packaging
+.Python
 build/
+develop-eggs/
 dist/
-*.egg-info/
+downloads/
+eggs/
 .eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
+# PyInstaller
+*.manifest
+*.spec
 
-# Unit test / coverage
-.pytest_cache/
-.tox/
-.coverage
-coverage.xml
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
 htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
 
-# =====================
-# Virtual environments
-# =====================
-venv/
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
 env/
-.venv/
+venv/
 ENV/
 env.bak/
+venv.bak/
 
-# =====================
-# OS-specific files
-# =====================
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-desktop.ini
+# Spyder project settings
+.spyderproject
+.spyproject
 
-# =====================
-# IDE / Editor files
-# =====================
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
+# Rope project settings
+.ropeproject
 
-# =====================
-# Project-specific ignores
-# =====================
+# mkdocs documentation
+/site
 
-# Logs & checkpoints
-*.log
-training.log
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ==========================================
+# AI/ML SPECIFIC FILES
+# ==========================================
+# Trained Models (large files)
+*.pt
+*.pth
 *.ckpt
+*.h5
+*.pb
+*.onnx
+*.tflite
+*.safetensors
 
-# Preprocessed data
+# Preprocessed Data
 *.pkl
 *.pickle
 *.p
 *.npz
+preprocess_*.pkl
+preprocess_*.pickle
 
-# Model weights
-*.pt
-*.pth
-model/
+# Training Logs and Outputs
+training_output.txt
+training.log
+logs/
+tensorboard_logs/
+wandb/
+mlruns/
+
+# Generated Scripts and Outputs
+generated_*.txt
+output_*.txt
+sample_*.txt
+
+# Model Checkpoints and Temporary Files
 checkpoints/
+temp_model*/
+model_temp*/
 models/
-
-# Generated plots
-*.png
-*.jpg
-*.jpeg
-*.svg
-*.pdf
-plots/
-
-# Hugging Face cache
-.cache/
-transformers_cache/
-datasets_cache/
-
-# Temporary files
 *.tmp
 *.temp
 
-# =====================
-# Data files
-# =====================
+# Hugging Face Cache
+.cache/
+transformers_cache/
+huggingface_hub/
+datasets_cache/
 
-# Ignore large data except sample datasets
-data/*
+# Dataset Cache
+.dataset_cache/
+dataset_cache/
+
+# ==========================================
+# VISUALIZATION OUTPUTS
+# ==========================================
+# HTML plots and reports
+*.html
+plots/
+visualizations/
+reports/
+figures/
+
+# Image outputs
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+
+# ==========================================
+# DEVELOPMENT TOOLS
+# ==========================================
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Icon?
+desktop.ini
+
+# ==========================================
+# DATA FILES (HANDLE WITH CARE)
+# ==========================================
+# Keep essential datasets but ignore large generated ones
+data/temp/
+data/processed/
+data/cache/
+
+# Keep sample and main datasets
 !data/sample.csv
 !data/sample.xlsx
-!data/Game_of_Thrones_Script.csv  # keep small example dataset
+!data/Game_of_Thrones_Script.csv
+!data/Game_of_Thrones_Script.xlsx
+!data/.gitkeep
 
-# =====================
-# Local configs
-# =====================
-*.env
-.env.*
+# ==========================================
+# CONFIGURATION FILES
+# ==========================================
+# Environment-specific configs
+config_local.py
+config_dev.py
+settings_local.py
 config.yaml
 config.json
+
+# API keys and secrets
+.env.*
+secrets.json
+api_keys.txt
+
+# ==========================================
+# PERFORMANCE AND PROFILING
+# ==========================================
+# Profiling output
+profile_output/
+*.prof
+
+# Memory dumps
+*.hprof
+*.dump
+
+# ==========================================
+# BACKUP FILES
+# ==========================================
+# Backup files
+*.bak
+*.backup
+*_backup.*
+*_old.*
+
+# ==========================================
+# TEMPORARY FILES
+# ==========================================
+# Temporary directories
+tmp/
+temp/
+temporary/
+
+# Lock files
+*.lock
+.lock
+
+# ==========================================
+# CLOUD AND DEPLOYMENT
+# ==========================================
+# Docker
+Dockerfile.local
+docker-compose.override.yml
+.dockerignore
+
+# Kubernetes
+k8s-local/
+
+# Cloud config
+.gcloud/
+.aws/
+
+# ==========================================
+# CUSTOM PROJECT IGNORES
+# ==========================================
+# Experiment outputs
+experiments/
+runs/
+outputs/
+
+# Large model files
+*_large.pt
+*_xlarge.pt
+*_full.pt
+
+# Development notebooks
+dev_*.ipynb
+test_*.ipynb
+scratch_*.ipynb
+
+# ==========================================
+# TEAM COLLABORATION NOTES
+# ==========================================
+# This .gitignore maintains:
+# ✅ Source code tracking
+# ✅ Essential dataset preservation
+# ❌ Generated/large files ignored
+# ❌ Sensitive information protected
+# ❌ Clean repository structure
+#
+# Use 'git add -f <filename>' for exceptions
+# Consider Git LFS for large models: git lfs track "*.pt"

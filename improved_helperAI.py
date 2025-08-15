@@ -1,5 +1,21 @@
+# improved_helperAI.py  
+# 🤖 ADVANCED AI HELPER FUNCTIONS FOR TV SCRIPT GENERATION
+#
+# FOR NON-PROGRAMMERS:
+# This file contains all the "behind-the-scenes" functions that help our AI work.
+# Think of it like a toolbox full of specialized tools that:
+# 
+# 1. 📖 READ AND UNDERSTAND DATA: Loads Game of Thrones scripts from files
+# 2. 🔄 PREPARE TEXT FOR AI: Converts human text into numbers the AI can understand  
+# 3. 🧠 MANAGE AI MODELS: Saves and loads our trained AI models
+# 4. 📊 ANALYZE PATTERNS: Studies the data to understand character speech patterns
+# 5. 🎯 CREATE TRAINING BATCHES: Organizes data for efficient AI learning
+#
+# You don't need to understand every line here - just know that these functions
+# work together to make our AI script generator possible!
+#
 # Modern TV Script Generation Helper Functions
-# Implements advanced preprocessing, tokenization, and model utilities
+# Implements advanced preprocessing, tokenization, and model utilities  
 # Updated for 2024 with Transformer support and modern NLP techniques
 
 import os
@@ -7,6 +23,8 @@ import pickle
 import json
 import pandas as pd
 import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Union
 from pathlib import Path
@@ -14,6 +32,7 @@ import logging
 from collections import Counter
 
 # Advanced tokenization and preprocessing
+# These libraries help us process text more intelligently
 try:
     from transformers import (
         AutoTokenizer,
@@ -23,22 +42,21 @@ try:
         GPT2Tokenizer,
         GPT2LMHeadModel,
     )
-    from datasets import Dataset
+    from datasets import Dataset as HFDataset
 
     TRANSFORMERS_AVAILABLE = True
 except ImportError:
     TRANSFORMERS_AVAILABLE = False
-    logging.warning("Transformers library not available. Using basic tokenization.")
+    logging.warning("⚠️ Transformers library not available. Using basic tokenization.")
 
 # Modern preprocessing libraries
 try:
     import sentencepiece as spm
-
     SENTENCEPIECE_AVAILABLE = True
 except ImportError:
     SENTENCEPIECE_AVAILABLE = False
 
-# Configure logging
+# Configure logging (helps us track what the program is doing)
 logging.basicConfig(
     level=logging.INFO,
     filename="training.log",
@@ -48,6 +66,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Enhanced special tokens for modern preprocessing
+# These are special markers that help the AI understand text structure
 SPECIAL_WORDS = {
     "PADDING": "<PAD>",
     "UNKNOWN": "<UNK>",
@@ -237,7 +256,7 @@ def advanced_token_lookup() -> Dict[str, str]:
 def preprocess_and_save_modern_data(
     data_path: Union[str, Path],
     output_path: str = "modern_preprocess.pkl",
-    tokenizer_type: str = "bpe",
+    tokenizer_type: str = "gpt2",
     model_name: str = "gpt2",
     min_frequency: int = 2,
     max_vocab_size: Optional[int] = None,
@@ -251,6 +270,7 @@ def preprocess_and_save_modern_data(
         f"{character_vocab.get(row['Character'], SPECIAL_WORDS['UNKNOWN'])} {row['Dialogue']}"
         for _, row in df.iterrows()
     ]
+
     all_text = " ".join(formatted)
 
     if processor.tokenizer is None:
@@ -270,11 +290,11 @@ def preprocess_and_save_modern_data(
         token_dict = {}
         tokens = processor.tokenizer.encode(all_text, add_special_tokens=True)
         vocab_to_int = {
-            tok: idx for idx, tok in processor.tokenizer.get_vocab().items()
+            tok: idx for tok, idx in processor.tokenizer.get_vocab().items()
         }
         int_to_vocab = {idx: tok for tok, idx in vocab_to_int.items()}
 
-    # Enforce sliding-window max length
+    # Enforce sliding-window with proper window and stride
     sequences = []
     for start in range(0, len(tokens), stride):
         chunk = tokens[start : start + context_window]
@@ -282,7 +302,7 @@ def preprocess_and_save_modern_data(
             pad_id = (
                 processor.tokenizer.pad_token_id
                 if processor.tokenizer
-                else vocab_to_int[SPECIAL_WORDS["PADDING"]]
+                else vocab_to_int.get(SPECIAL_WORDS["PADDING"], 0)
             )
             chunk += [pad_id] * (context_window - len(chunk))
         sequences.append(chunk)
@@ -309,11 +329,14 @@ def preprocess_and_save_modern_data(
         "metadata": metadata,
         "raw_data": df.to_dict("records"),
     }
+
     with open(output_path, "wb") as f:
         pickle.dump(preprocessed_data, f)
+
     logger.info(
         f"Saved preprocessed data with {len(sequences)} sequences to {output_path}"
     )
+
     return preprocessed_data
 
 
@@ -370,6 +393,111 @@ def load_modern_model(filepath: str, model_class=None, **model_kwargs):
     else:
         logger.info(f"Loaded legacy model from {filepath}")
         return checkpoint, {}
+
+
+class SequenceDataset(Dataset):
+    """
+    PyTorch Dataset for handling chunked sequences with proper length control.
+    Ensures sequences don't exceed model's maximum input length.
+    """
+    def __init__(self, sequences: List[List[int]], max_length: int = 1024):
+        self.sequences = sequences
+        self.max_length = max_length
+        
+        # Filter and truncate sequences to ensure they fit within max_length
+        self.filtered_sequences = []
+        for seq in sequences:
+            if len(seq) > max_length:
+                # Split long sequences into chunks
+                for i in range(0, len(seq), max_length):
+                    chunk = seq[i:i + max_length]
+                    if len(chunk) > 1:  # Need at least 2 tokens (input + target)
+                        self.filtered_sequences.append(chunk)
+            elif len(seq) > 1:
+                self.filtered_sequences.append(seq)
+        
+        logger.info(f"Dataset created with {len(self.filtered_sequences)} valid sequences")
+        logger.info(f"Max sequence length: {max([len(seq) for seq in self.filtered_sequences])}")
+        
+    def __len__(self):
+        return len(self.filtered_sequences)
+    
+    def __getitem__(self, idx):
+        sequence = self.filtered_sequences[idx]
+        # Create input (all tokens except last) and target (all tokens except first)
+        input_seq = torch.tensor(sequence[:-1], dtype=torch.long)
+        target_seq = torch.tensor(sequence[1:], dtype=torch.long)
+        return input_seq, target_seq
+
+
+def create_train_val_loaders(
+    sequences: List[List[int]], 
+    batch_size: int = 32, 
+    max_length: int = 1024,
+    val_split: float = 0.1,
+    shuffle: bool = True
+) -> Tuple[DataLoader, DataLoader]:
+    """
+    Create training and validation DataLoaders with proper sequence length handling.
+    """
+    # Split sequences into train and validation
+    split_idx = int(len(sequences) * (1 - val_split))
+    train_sequences = sequences[:split_idx]
+    val_sequences = sequences[split_idx:]
+    
+    logger.info(f"Creating data loaders: {len(train_sequences)} train, {len(val_sequences)} val sequences")
+    
+    train_loader = create_data_loader(train_sequences, batch_size, max_length, shuffle=shuffle)
+    val_loader = create_data_loader(val_sequences, batch_size, max_length, shuffle=False)
+    
+    return train_loader, val_loader
+
+
+def create_data_loader(
+    sequences: List[List[int]], 
+    batch_size: int = 32, 
+    max_length: int = 1024,
+    shuffle: bool = True
+) -> DataLoader:
+    """
+    Create a DataLoader with proper sequence length handling.
+    """
+    dataset = SequenceDataset(sequences, max_length=max_length)
+    
+    def collate_fn(batch):
+        # Separate inputs and targets
+        inputs, targets = zip(*batch)
+        
+        # Pad sequences to the same length within the batch
+        max_len = min(max_length - 1, max([len(seq) for seq in inputs]))
+        
+        padded_inputs = []
+        padded_targets = []
+        
+        for inp, tgt in zip(inputs, targets):
+            # Truncate if necessary
+            if len(inp) > max_len:
+                inp = inp[:max_len]
+                tgt = tgt[:max_len]
+            
+            # Pad if necessary  
+            pad_length = max_len - len(inp)
+            if pad_length > 0:
+                inp = torch.cat([inp, torch.zeros(pad_length, dtype=torch.long)])
+                tgt = torch.cat([tgt, torch.zeros(pad_length, dtype=torch.long)])
+            
+            padded_inputs.append(inp)
+            padded_targets.append(tgt)
+        
+        return torch.stack(padded_inputs), torch.stack(padded_targets)
+    
+    return DataLoader(
+        dataset, 
+        batch_size=batch_size, 
+        shuffle=shuffle, 
+        collate_fn=collate_fn,
+        drop_last=True  # Drop incomplete batches to maintain consistent shapes
+    )
 
 
 def analyze_dataset(data_path: Union[str, Path]) -> Dict:
