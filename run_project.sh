@@ -51,12 +51,6 @@ fi
 source "$VENV_ACTIVATE"
 
 # -------------------------------
-# Upgrade pip
-# -------------------------------
-echo "Upgrading pip..."
-pip install --upgrade pip
-
-# -------------------------------
 # Detect optimal CUDA/PyTorch Wheel using nvcc
 # -------------------------------
 USE_CUDA121=false

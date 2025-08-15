@@ -1,15 +1,5 @@
 Token indices sequence length is longer than the specified maximum sequence length for this model (535275 > 1024). Running this sequence through the model will result in indexing errors
-Traceback (most recent call last):
-  File "C:\Users\arish\Documents\Github\project-tv-script-generation\main_modern.py", line 88, in <module>
-    avg_loss = trainer.train_epoch(epoch)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\arish\Documents\Github\project-tv-script-generation\modern_example_usage.py", line 220, in train_epoch
-    loss.backward()
-  File "C:\Users\arish\Documents\Github\project-tv-script-generation\venv\Lib\site-packages\torch\_tensor.py", line 647, in backward
-    torch.autograd.backward(
-  File "C:\Users\arish\Documents\Github\project-tv-script-generation\venv\Lib\site-packages\torch\autograd\__init__.py", line 354, in backward
-    _engine_run_backward(
-  File "C:\Users\arish\Documents\Github\project-tv-script-generation\venv\Lib\site-packages\torch\autograd\graph.py", line 829, in _engine_run_backward
-    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: [enforce fail at alloc_cpu.cpp:121] data. DefaultCPUAllocator: not enough memory: you tried to allocate 6580852608 bytes.
+D:\Github\project-tv-script-generation\modern_example_usage.py:169: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  self.scaler = torch.cuda.amp.GradScaler() if torch.cuda.is_available() else None
+D:\Github\project-tv-script-generation\modern_example_usage.py:180: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
