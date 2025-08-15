@@ -99,25 +99,26 @@ logger.info("🎬 Game of Thrones AI Script Generator Started")
 logger.info(f"🖥️  Device: {DEVICE}")
 
 # 📝 Text processing settings
-TOKENIZER_TYPE = "gpt2"        # Type of text processor (GPT-2 is very good)
-MODEL_NAME = "gpt2"            # Specific model variant to use
-MIN_FREQUENCY = 2              # Only include words that appear at least 2 times
-MAX_VOCAB_SIZE = 10000         # Maximum vocabulary size (number of unique words)
-CONTEXT_WINDOW = 64            # How many words the AI considers at once (REDUCED for stability)
+TOKENIZER_TYPE = "custom"      # Use custom vocabulary instead of GPT-2 (FIXED: vocabulary mismatch)
+MODEL_NAME = "custom"          # Custom model for Game of Thrones data
+MIN_FREQUENCY = 3              # Higher threshold for cleaner vocabulary (was 2)
+MAX_VOCAB_SIZE = 15000         # Reasonable vocabulary size (was 10000, GPT-2 was 50257)
+CONTEXT_WINDOW = 128           # Larger context for better dialogue coherence (was 64)
 
 # 🎓 Training settings - how the AI learns
-BATCH_SIZE = 16                # How many examples to learn from at once
+BATCH_SIZE = 8                 # Smaller batches to accommodate larger sequences (was 16)
 NUM_EPOCHS = 200               # How many times to go through all the data (INCREASED for better quality)
-EMBEDDING_DIM = 256            # Size of word representations
-HIDDEN_DIM = 512               # Size of AI's "memory" 
-NUM_LAYERS = 2                 # Number of processing layers in the AI
-DROPOUT = 0.3                  # Helps prevent overfitting (memorizing too much)
+EMBEDDING_DIM = 384            # Larger word representations for better quality (was 256)
+HIDDEN_DIM = 768               # Larger AI "memory" for better context (was 512)
+NUM_LAYERS = 3                 # More processing layers (was 2)
+DROPOUT = 0.2                  # Reduced dropout for better retention (was 0.3)
 LR = 1e-4                      # Learning rate - how fast the AI adapts (REDUCED)
 
 # 🎭 Generation settings - how the AI creates new text
-TOP_P = 0.9                    # Creativity parameter (0.9 = somewhat creative)
-TEMPERATURE = 0.8              # Randomness (0.8 = moderately random)
+TOP_P = 0.95                   # Less restrictive nucleus sampling for more variety (was 0.9)
+TEMPERATURE = 0.7              # Lower temperature for more coherent output (was 0.8)
 GEN_LENGTH = 200               # Length of generated text
+REPETITION_PENALTY = 1.2       # NEW: Penalize repeated tokens to reduce loops
 
 # Log configuration after variables are defined
 logger.info(f"⚙️  Configuration: {BATCH_SIZE} batch size, {NUM_EPOCHS} epochs, {CONTEXT_WINDOW} context window")
@@ -478,11 +479,12 @@ def train_ai_model(trainer, num_epochs, model, preprocessed_data, vocab_size, ch
                         )
                         
                         sample_text = temp_generator.generate_nucleus_sampling(
-                            seed_text="jon snow:",
+                            seed_text="<TYRION LANNISTER>",
                             max_length=100,
-                            top_p=0.9,
-                            temperature=0.8,
-                            character="jon snow"
+                            top_p=TOP_P,
+                            temperature=TEMPERATURE,
+                            character="tyrion lannister",
+                            repetition_penalty=REPETITION_PENALTY
                         )
                         
                         print(f"   🎭 Sample: {sample_text[:150]}...")
@@ -610,11 +612,12 @@ if __name__ == '__main__':
     )
 
     script = generator.generate_nucleus_sampling(
-        seed_text="jon snow:",
+        seed_text="<TYRION LANNISTER>",
         max_length=200,
-        top_p=0.9,
-        temperature=0.8,
-        character="jon snow",
+        top_p=TOP_P,
+        temperature=TEMPERATURE,
+        character="tyrion lannister",
+        repetition_penalty=REPETITION_PENALTY
     )
     print(script)
 

@@ -154,7 +154,16 @@ def standardize_dataframe_columns(df: pd.DataFrame) -> pd.DataFrame:
             break
 
     if "Character" not in df.columns or "Dialogue" not in df.columns:
-        raise ValueError("Dataset must contain character and dialogue columns")
+        logger.warning(f"Could not find standard columns. Available: {df.columns.tolist()}")
+        # Handle the specific case of the GoT dataset
+        if "Name" in df.columns:
+            df = df.rename(columns={"Name": "Character"})
+        if "Sentence" in df.columns:
+            df = df.rename(columns={"Sentence": "Dialogue"})
+        
+        # Check again after renaming
+        if "Character" not in df.columns or "Dialogue" not in df.columns:
+            raise ValueError(f"Dataset must contain character and dialogue columns. Found: {df.columns.tolist()}")
 
     df = df[["Character", "Dialogue"]].dropna()
     df["Character"] = df["Character"].astype(str).str.lower().str.strip()
@@ -272,6 +281,23 @@ def preprocess_and_save_modern_data(
     ]
 
     all_text = " ".join(formatted)
+    
+    # Enhanced character tag preprocessing
+    main_characters = [
+        "TYRION LANNISTER", "DAENERYS TARGARYEN", "JON SNOW", 
+        "CERSEI LANNISTER", "ARYA STARK", "SANSA STARK",
+        "BRAN STARK", "JAIME LANNISTER", "SAMWELL TARLY",
+        "THEON GREYJOY", "YARA GREYJOY", "VARYS", "PETYR BAELISH"
+    ]
+    
+    # Preprocess text to handle character tags properly
+    for char in main_characters:
+        all_text = all_text.replace(f"<{char}>", f" <{char}> ")
+        all_text = all_text.replace(f"  <{char}>  ", f" <{char}> ")  # Clean double spaces
+    
+    # Clean up extra whitespace
+    import re
+    all_text = re.sub(r'\s+', ' ', all_text).strip()
 
     if processor.tokenizer is None:
         tok_map = advanced_token_lookup()

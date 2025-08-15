@@ -139,8 +139,9 @@ class ModernScriptRNN(nn.Module):
         output = self.dropout(output)
         output = self.fc2(output)
 
-        final_output = output[:, -1, :]
-        return final_output, hidden
+        # Return full sequence outputs for training
+        # For generation, we can get the last token with output[:, -1, :]
+        return output, hidden
 
     def init_hidden(self, batch_size, device="cpu"):
         return (
@@ -252,9 +253,23 @@ class ModernTrainer:
                 from torch.amp.autocast_mode import autocast
                 with autocast('cuda'):
                     outputs, _ = self.model(inputs, hidden)
-                    # Flatten for loss calculation
-                    outputs_flat = outputs.view(-1, outputs.size(-1))
-                    targets_flat = targets.view(-1)
+                    
+                    # Debug tensor shapes
+                    if batch_idx == 0 and epoch == 0:
+                        self.logger.info(f"DEBUG - Input shape: {inputs.shape}")
+                        self.logger.info(f"DEBUG - Targets shape: {targets.shape}")
+                        self.logger.info(f"DEBUG - Outputs shape: {outputs.shape}")
+                    
+                    # Ensure shapes match for proper flattening
+                    if outputs.dim() == 3 and targets.dim() == 2:
+                        # outputs: [batch, seq_len, vocab_size], targets: [batch, seq_len]
+                        outputs_flat = outputs.view(-1, outputs.size(-1))  # [batch*seq_len, vocab_size]
+                        targets_flat = targets.view(-1)  # [batch*seq_len]
+                    else:
+                        # Handle mismatched dimensions
+                        self.logger.error(f"Shape mismatch: outputs {outputs.shape}, targets {targets.shape}")
+                        raise ValueError(f"Unexpected tensor shapes: outputs {outputs.shape}, targets {targets.shape}")
+                    
                     loss = self.criterion(outputs_flat, targets_flat)
                     
                 self.scaler.scale(loss).backward()
@@ -267,8 +282,23 @@ class ModernTrainer:
                 self.scaler.update()
             else:
                 outputs, _ = self.model(inputs, hidden)
-                outputs_flat = outputs.view(-1, outputs.size(-1))
-                targets_flat = targets.view(-1)
+                
+                # Debug tensor shapes
+                if batch_idx == 0 and epoch == 0:
+                    self.logger.info(f"DEBUG - Input shape: {inputs.shape}")
+                    self.logger.info(f"DEBUG - Targets shape: {targets.shape}")
+                    self.logger.info(f"DEBUG - Outputs shape: {outputs.shape}")
+                
+                # Ensure shapes match for proper flattening
+                if outputs.dim() == 3 and targets.dim() == 2:
+                    # outputs: [batch, seq_len, vocab_size], targets: [batch, seq_len]
+                    outputs_flat = outputs.view(-1, outputs.size(-1))  # [batch*seq_len, vocab_size]
+                    targets_flat = targets.view(-1)  # [batch*seq_len]
+                else:
+                    # Handle mismatched dimensions
+                    self.logger.error(f"Shape mismatch: outputs {outputs.shape}, targets {targets.shape}")
+                    raise ValueError(f"Unexpected tensor shapes: outputs {outputs.shape}, targets {targets.shape}")
+                
                 loss = self.criterion(outputs_flat, targets_flat)
                 loss.backward()
                 
@@ -332,8 +362,22 @@ class ModernTrainer:
                 hidden = self.model.init_hidden(inputs.size(0), device)
                 
                 outputs, _ = self.model(inputs, hidden)
-                outputs_flat = outputs.view(-1, outputs.size(-1))
-                targets_flat = targets.view(-1)
+                
+                # Debug tensor shapes for validation
+                if batch_idx == 0 and epoch == 0:
+                    self.logger.info(f"VAL DEBUG - Input shape: {inputs.shape}")
+                    self.logger.info(f"VAL DEBUG - Targets shape: {targets.shape}")
+                    self.logger.info(f"VAL DEBUG - Outputs shape: {outputs.shape}")
+                
+                # Ensure shapes match for proper flattening
+                if outputs.dim() == 3 and targets.dim() == 2:
+                    outputs_flat = outputs.view(-1, outputs.size(-1))  # [batch*seq_len, vocab_size]
+                    targets_flat = targets.view(-1)  # [batch*seq_len]
+                else:
+                    # Handle mismatched dimensions
+                    self.logger.error(f"VAL Shape mismatch: outputs {outputs.shape}, targets {targets.shape}")
+                    raise ValueError(f"VAL Unexpected tensor shapes: outputs {outputs.shape}, targets {targets.shape}")
+                
                 loss = self.criterion(outputs_flat, targets_flat)
                 
                 total_val_loss += loss.item()
@@ -482,6 +526,7 @@ class ModernGenerator:
         top_p: float = 0.9,
         temperature: float = 1.0,
         character: Optional[str] = None,
+        repetition_penalty: float = 1.2,
     ) -> str:
         self.model.eval()
         device = next(self.model.parameters()).device
@@ -516,7 +561,16 @@ class ModernGenerator:
                 char_id = torch.tensor([idx], device=device)
 
             logits, _ = self.model(input_ids, hidden, char_id)
-            logits = logits[0] / temperature
+            # Get the last token's logits for next token prediction
+            logits = logits[0, -1, :] / temperature
+
+            # Apply repetition penalty
+            if repetition_penalty != 1.0 and generated_tokens:
+                for token_id in set(generated_tokens[-50:]):  # Only consider recent tokens
+                    if logits[token_id] > 0:
+                        logits[token_id] /= repetition_penalty
+                    else:
+                        logits[token_id] *= repetition_penalty
 
             # Nucleus (top-p) sampling filtering
             sorted_logits, sorted_indices = torch.sort(logits, descending=True)
