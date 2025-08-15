@@ -171,19 +171,6 @@ def analyze_got_data():
         return None
 
 # ================================================================
-# 🚀 MAIN EXECUTION (Protected with multiprocessing guard)
-# FOR NON-PROGRAMMERS: This prevents Windows multiprocessing issues
-# ================================================================
-
-if __name__ == '__main__':
-    # Add multiprocessing freeze_support for Windows compatibility
-    import multiprocessing
-    multiprocessing.freeze_support()
-    
-    # Run the analysis
-    analysis_results = analyze_got_data()
-
-# ================================================================
 # 📝 STEP 2: DATA PREPROCESSING (Preparing text for AI training)
 # FOR NON-PROGRAMMERS: This converts human text into numbers the AI can understand
 # ================================================================
@@ -234,13 +221,6 @@ def preprocess_got_data():
         print(f"❌ Preprocessing failed: {e}")
         print("💡 Check your data file format and try again")
         return None
-
-    # Run preprocessing
-    preprocessed_data = preprocess_got_data()
-
-    if preprocessed_data is None:
-        print("❌ Cannot continue without preprocessed data. Please fix the issues above.")
-        exit(1)
 
 # ================================================================
 # 🔧 STEP 3: PREPARE DATA FOR TRAINING (Creating AI-friendly data batches)
@@ -294,12 +274,6 @@ def prepare_training_data(preprocessed_data):
     except Exception as e:
         print(f"❌ Error preparing training data: {e}")
         return None
-
-    train_loader = prepare_training_data(preprocessed_data)
-
-    if train_loader is None:
-        print("❌ Cannot continue without training data. Please fix the issues above.")
-        exit(1)
 
 # ================================================================
 # 🧠 STEP 4: MODEL INITIALIZATION (Creating the AI brain)
@@ -360,12 +334,6 @@ def create_ai_model(preprocessed_data):
         print(f"❌ Error creating model: {e}")
         return None, None, None
 
-    model, vocab_size, characters = create_ai_model(preprocessed_data)
-
-    if model is None:
-        print("❌ Cannot continue without a valid model. Please fix the issues above.")
-        exit(1)
-
 # ================================================================
 # 🎓 STEP 5: TRAINING SETUP (Preparing the AI teacher)
 # FOR NON-PROGRAMMERS: This creates the system that will teach our AI how to write
@@ -400,12 +368,6 @@ def setup_trainer(model, train_loader, preprocessed_data):
     except Exception as e:
         print(f"❌ Error setting up trainer: {e}")
         return None
-
-    trainer = setup_trainer(model, train_loader, preprocessed_data)
-
-    if trainer is None:
-        print("❌ Cannot continue without a trainer. Please fix the issues above.")
-        exit(1)
 
 # ================================================================
 # 🚀 STEP 6: MAIN TRAINING LOOP (Teaching the AI)
@@ -567,6 +529,44 @@ def train_ai_model(trainer, num_epochs, model, preprocessed_data, vocab_size, ch
         print(f"❌ Training error: {e}")
         logger.error(f"❌ Training error: {e}")
         return training_losses, best_loss
+
+# ================================================================
+# 🚀 MAIN EXECUTION (Protected with multiprocessing guard)
+# FOR NON-PROGRAMMERS: This prevents Windows multiprocessing issues
+# ================================================================
+
+if __name__ == '__main__':
+    # Add multiprocessing freeze_support for Windows compatibility
+    import multiprocessing
+    multiprocessing.freeze_support()
+    
+    # Run the analysis
+    analysis_results = analyze_got_data()
+
+    # Run preprocessing
+    preprocessed_data = preprocess_got_data()
+
+    if preprocessed_data is None:
+        print("❌ Cannot continue without preprocessed data. Please fix the issues above.")
+        exit(1)
+
+    train_loader = prepare_training_data(preprocessed_data)
+
+    if train_loader is None:
+        print("❌ Cannot continue without training data. Please fix the issues above.")
+        exit(1)
+
+    model, vocab_size, characters = create_ai_model(preprocessed_data)
+
+    if model is None:
+        print("❌ Cannot continue without a valid model. Please fix the issues above.")
+        exit(1)
+
+    trainer = setup_trainer(model, train_loader, preprocessed_data)
+
+    if trainer is None:
+        print("❌ Cannot continue without a trainer. Please fix the issues above.")
+        exit(1)
 
     # Start training
     training_losses, final_best_loss = train_ai_model(trainer, NUM_EPOCHS, model, preprocessed_data, vocab_size, characters)
