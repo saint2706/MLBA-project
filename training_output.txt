@@ -1,3 +1,0 @@
-2025-08-16 13:36:54 | INFO | 🎬 Game of Thrones AI Script Generator Started
-2025-08-16 13:36:54 | INFO | 🖥️  Device: cuda
-2025-08-16 13:36:54 | INFO | ⚙️  Configuration: 8 batch size, 200 epochs, 128 context window
