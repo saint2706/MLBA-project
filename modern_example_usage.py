@@ -518,6 +518,50 @@ class ModernGenerator:
         self.int_to_vocab = int_to_vocab
         self.character_vocab = character_vocab or {}
         self.tokenizer = tokenizer  # pass in tokenizer for encoding
+    
+    def decode_custom_tokens(self, text: str) -> str:
+        """Convert custom tokens back to punctuation"""
+        token_map = {
+            "||period||": ".",
+            "||comma||": ",", 
+            "||exclamation||": "!",
+            "||question||": "?",
+            "||semicolon||": ";",
+            "||colon||": ":",
+            "||quote||": '"',
+            "||apostrophe||": "'",
+            "||lparen||": "(",
+            "||rparen||": ")",
+            "||lbracket||": "[",
+            "||rbracket||": "]",
+            "||dash||": "-",
+            "||ndash||": "–",
+            "||mdash||": "—",
+            "||newline||": "\n",
+            "||tab||": "\t",
+            "||ellipsis||": "...",
+            "||slash||": "/",
+            "||ampersand||": "&",
+            "||at||": "@",
+            "||hash||": "#",
+            "||dollar||": "$",
+            "||percent||": "%",
+            "||star||": "*",
+            "||plus||": "+",
+            "||equal||": "=",
+            "||less||": "<",
+            "||greater||": ">",
+            "||caret||": "^",
+            "||underscore||": "_",
+            "||pipe||": "|",
+            "||tilde||": "~",
+            "||backtick||": "`",
+        }
+        
+        for token, symbol in token_map.items():
+            text = text.replace(token, symbol)
+        
+        return text
 
     def generate_nucleus_sampling(
         self,
