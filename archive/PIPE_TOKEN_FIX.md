@@ -36,14 +36,14 @@ The training output showing endless `||pipe||` tokens is caused by a **tokenizat
 
 ## 🛠️ **Immediate Fixes Required**
 
-### **Fix 1: Add Post-Processing Decoding** 
+### **Fix 1: Add Post-Processing Decoding**
 ```python
 # In ModernGenerator.generate_nucleus_sampling() method
 def decode_custom_tokens(self, text: str) -> str:
-    """Convert custom tokens back to punctuation"""
+    """Converts custom tokens back to punctuation."""
     token_map = {
         "||period||": ".",
-        "||comma||": ",", 
+        "||comma||": ",",
         "||exclamation||": "!",
         "||question||": "?",
         "||pipe||": "|",
@@ -61,7 +61,7 @@ def decode_custom_tokens(self, text: str) -> str:
 
 ### **Fix 2: Update Generation Method**
 ```python
-# Add to end of generate_nucleus_sampling()
+# Add to the end of generate_nucleus_sampling()
 if self.tokenizer is None:
     words = [self.int_to_vocab.get(t, "<UNK>") for t in generated_tokens]
     text = " ".join(words)
@@ -76,7 +76,7 @@ else:
 def advanced_token_lookup() -> Dict[str, str]:
     return {
         ".": "PERIOD",
-        ",": "COMMA", 
+        ",": "COMMA",
         "!": "EXCLAMATION",
         "?": "QUESTION",
         # Remove pipe mapping entirely to avoid confusion
@@ -84,18 +84,18 @@ def advanced_token_lookup() -> Dict[str, str]:
         "<": "LESS",
         ">": "GREATER",
         "'": "APOSTROPHE",
-        # ... etc
+        # ... etc.
     }
 ```
 
-## 🧪 **Testing the Fix**
+## 🧪 Testing the Fix
 
-### **Expected Before Fix:**
+### **Expected Before Fix**
 ```
-📝 SAMPLE AT EPOCH 140: first withstand ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe|| ||pipe...
+📝 SAMPLE AT EPOCH 140: first withstand ||pipe|| ||pipe|| ||pipe|| ||pipe|| ...
 ```
 
-### **Expected After Fix:**
+### **Expected After Fix**
 ```
 📝 SAMPLE AT EPOCH 140: <TYRION LANNISTER> The wine helps me think more clearly. <CATELYN STARK> You were right about the north. <JON SNOW> I don't want to be king. My place is with the Night's Watch.
 ```

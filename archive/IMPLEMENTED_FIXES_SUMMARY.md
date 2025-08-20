@@ -73,71 +73,71 @@ main_characters = [
 ### 🎯 **Expected Improvements**
 
 #### **Before Fixes (Current Issues):**
-- ❌ Repetitive text: "turned turned turned turned"  
-- ❌ Corrupted names: "<DAEN" instead of "DAENERYS"
-- ❌ Nonsensical patterns: "RAMRAMSAY BOLOLOL"
-- ❌ No context coherence
-- ❌ Token vocabulary mismatch
+- Repetitive text (e.g., "turned turned turned turned").
+- Corrupted names (e.g., "<DAEN" instead of "DAENERYS").
+- Nonsensical patterns (e.g., "RAMRAMSAY BOLOLOL").
+- No context coherence.
+- Token vocabulary mismatch.
 
-#### **After Fixes (Expected Results):**
-- ✅ Coherent character names
-- ✅ Reduced repetition loops
-- ✅ Better dialogue context
-- ✅ Proper vocabulary alignment
-- ✅ More natural speech patterns
+#### **After Fixes (Expected Results)**
+- Coherent character names.
+- Reduced repetition loops.
+- Better dialogue context.
+- Proper vocabulary alignment.
+- More natural speech patterns.
 
-## 🧪 **Test Results Analysis**
+## 🧪 Test Results Analysis
 
-### ✅ **Successful Improvements:**
-- ✅ **Vocabulary Fixed**: 50K→4.7K tokens (manageable size)
-- ✅ **No More Loops**: No repetitive "turned turned turned" patterns
-- ✅ **Better Architecture**: 52M parameters, ~199MB model
-- ✅ **Stable Training**: 229 batches created successfully
-- ✅ **GPU Compatible**: Runs on GTX 1650 with 4.3GB memory
+### ✅ Successful Improvements
+- **Vocabulary Fixed**: 50K→4.7K tokens (manageable size).
+- **No More Loops**: No repetitive "turned turned turned" patterns.
+- **Better Architecture**: 52M parameters, ~199MB model.
+- **Stable Training**: 229 batches created successfully.
+- **GPU Compatible**: Runs on GTX 1650 with 4.3GB memory.
 
-### ❌ **Remaining Issues from Test:**
-- ❌ **Word Salad Output**: Still no coherent dialogue structure
-- ❌ **Missing Character Tags**: No `<TYRION LANNISTER>` style formatting
-- ❌ **No Dialogue Structure**: Missing conversational patterns
-- ❌ **Random Vocabulary**: Words like "bannermen fucked edge honey" without context
+### ❌ Remaining Issues from Test
+- **Word Salad Output**: Still no coherent dialogue structure.
+- **Missing Character Tags**: No `<TYRION LANNISTER>` style formatting.
+- **No Dialogue Structure**: Missing conversational patterns.
+- **Random Vocabulary**: Words like "bannermen fucked edge honey" without context.
 
-### 🔧 **Additional Fixes Required:**
+### 🔧 Additional Fixes Required
 
 #### **Issue 1: Missing Dialogue Structure**
-**Problem**: Model not learning character→dialogue patterns
-**Fix**: Improve seed text formatting
+**Problem**: The model is not learning character→dialogue patterns.
+**Fix**: Improve seed text formatting.
 
-### **Recommended Testing Process:**
+### **Recommended Testing Process**
 
 1. **Quick Validation (30 minutes)**
-   ```bash
+   ```shell
    python main_modern.py
-   # Stop after 5-10 epochs to check sample quality
+   # Stop after 5-10 epochs to check sample quality.
    ```
 
 2. **Sample Comparison**
-   - Check epoch 20 sample vs previous training
-   - Look for reduced repetition
-   - Verify character name integrity
+   - Check epoch 20 sample vs. previous training.
+   - Look for reduced repetition.
+   - Verify character name integrity.
 
 3. **Full Training (if samples improve)**
-   ```bash
+   ```shell
    # Run full 200 epochs with new configuration
    python main_modern.py
    ```
 
-### **Key Metrics to Monitor:**
+### **Key Metrics to Monitor**
 
-#### **Quality Indicators:**
-- ✅ Character names appear correctly
-- ✅ Less repetitive token patterns
-- ✅ Longer coherent sentences
-- ✅ Contextually relevant responses
+#### **Quality Indicators**
+- Character names appear correctly.
+- Less repetitive token patterns.
+- Longer coherent sentences.
+- Contextually relevant responses.
 
-#### **Training Metrics:**
-- 📊 Loss should still decrease steadily
-- 📊 Training time per epoch (may be slightly longer)
-- 📊 GPU memory usage (should be manageable)
+#### **Training Metrics**
+- Loss should still decrease steadily.
+- Training time per epoch (may be slightly longer).
+- GPU memory usage (should be manageable).
 
 ## 📊 **Configuration Summary**
 

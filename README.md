@@ -23,30 +23,30 @@ This AI system reads thousands of lines from the show and learns to generate new
 ## 🚀 Quick Start Commands
 
 ### **🏁 One-Click Training (Recommended)**
-```powershell
+```shell
 python main_modern.py
 ```
-*Trains for 200 epochs with full logging and visualization*
+*Trains for 200 epochs with full logging and visualization.*
 
 ### **⚡ Extended Training (Best Quality)**
-```powershell
+```shell
 python modern_example_usage.py
 ```
-*Enhanced 200-epoch training with sample generation every 5 epochs*
+*Enhanced 200-epoch training with sample generation every 5 epochs.*
 
 ### **📊 Create Training Dashboard**
-```powershell
+```shell
 python -c "from modern_plot import quick_dashboard; quick_dashboard()"
 ```
-*Generates interactive HTML visualizations of training progress*
+*Generates interactive HTML visualizations of training progress.*
 
 ### **🎭 Generate Dialogue (Quick Test)**
-```powershell
+```shell
 python -c "from modern_example_usage import quick_generate; quick_generate('jon snow:', character='jon snow')"
 ```
 
 ### **📈 Analyze Dataset**
-```powershell
+```shell
 python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset('data/Game_of_Thrones_Script.csv'))"
 ```
 
@@ -55,31 +55,34 @@ python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset(
 ## 🛠️ Installation
 
 ### **Prerequisites**
-- **Python 3.10 or 3.11** (recommended)
-- **NVIDIA GPU** (optional but recommended for faster training)
-- **8GB+ RAM** (16GB+ recommended)
+- **Python 3.10 or 3.11** (recommended).
+- **NVIDIA GPU** (optional but recommended for faster training).
+- **8GB+ RAM** (16GB+ recommended).
 
 ### **Step 1: Clone Repository**
-```powershell
+```shell
 git clone https://github.com/saint2706/MLBA-project.git
 cd MLBA-project
 ```
 
 ### **Step 2: Create Virtual Environment**
-```powershell
+```shell
 python -m venv venv
+# On Windows
 .\venv\Scripts\Activate
+# On macOS/Linux
+source venv/bin/activate
 ```
 
 ### **Step 3: Install Dependencies**
-```powershell
-pip install -U pip
+```shell
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
 ### **Step 4: Verify Installation**
-```powershell
-python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA Available: {torch.cuda.is_available()}')"
+```shell
+python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA Available: {torch.cuda.is_available()}')"
 ```
 
 ---
@@ -94,12 +97,14 @@ python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA Av
 ### **🎛️ Customization Options**
 
 **Change training duration:**
-```powershell
+```shell
+# This command runs a modified version of the main script with NUM_EPOCHS set to 50.
 python -c "exec(open('main_modern.py').read().replace('NUM_EPOCHS = 200', 'NUM_EPOCHS = 50'))"
 ```
 
 **GPU memory optimization (if you get CUDA errors):**
-```powershell
+```shell
+# This command runs a modified version of the main script with BATCH_SIZE set to 8.
 python -c "exec(open('main_modern.py').read().replace('BATCH_SIZE = 16', 'BATCH_SIZE = 8'))"
 ```
 
@@ -108,7 +113,7 @@ python -c "exec(open('main_modern.py').read().replace('BATCH_SIZE = 16', 'BATCH_
 ## 🎭 Generation Commands
 
 ### **Generate with Different Characters**
-```powershell
+```shell
 # Jon Snow
 python -c "from modern_example_usage import quick_generate; quick_generate('jon snow: ', character='jon snow')"
 
@@ -120,7 +125,7 @@ python -c "from modern_example_usage import quick_generate; quick_generate('daen
 ```
 
 ### **Control Creativity Level**
-```powershell
+```shell
 # Conservative (more predictable)
 python -c "from modern_example_usage import quick_generate; quick_generate('jon snow: ', temperature=0.5)"
 
@@ -129,7 +134,7 @@ python -c "from modern_example_usage import quick_generate; quick_generate('jon 
 ```
 
 ### **Generate Longer Dialogue**
-```powershell
+```shell
 python -c "from modern_example_usage import quick_generate; quick_generate('jon snow: ', max_length=300)"
 ```
 
@@ -138,24 +143,24 @@ python -c "from modern_example_usage import quick_generate; quick_generate('jon 
 ## 📊 Monitoring & Analysis
 
 ### **📈 Real-time Training Progress**
-```powershell
-# Watch training logs live
-Get-Content training_output.txt -Wait -Tail 10
+```shell
+# Watch training logs live (use 'type' on Windows CMD)
+tail -f training_output.txt
 ```
 
 ### **📊 Generate All Visualizations**
-```powershell
+```shell
 python modern_plot.py
 ```
 
 ### **🔍 Check Model Performance**
-```powershell
+```shell
 python -c "from modern_plot import parse_training_log; metrics = parse_training_log('training_output.txt'); print(f'Best Loss: {min(metrics[\"loss\"]):.4f}')"
 ```
 
 ### **📋 Training Summary**
-```powershell
-python -c "import os; print(f'Model files: {[f for f in os.listdir() if f.endswith(\".pt\")]}'); print(f'Log size: {os.path.getsize(\"training_output.txt\") if os.path.exists(\"training_output.txt\") else 0} bytes')"
+```shell
+python -c "import os; print(f'Model files: {[f for f in os.listdir() if f.endswith(\".pt\")]}, Log size: {os.path.getsize(\"training_output.txt\") if os.path.exists(\"training_output.txt\") else 0} bytes')"
 ```
 
 ---
@@ -183,30 +188,29 @@ project-tv-script-generation/
 ## 🎯 Usage Examples
 
 ### **🏃‍♂️ Quick Training Session (1-2 hours)**
-```powershell
-# Modify for shorter training
-python -c "
-import main_modern
-main_modern.NUM_EPOCHS = 50  # Reduce epochs
-exec(open('main_modern.py').read())
-"
+```shell
+# Modify main_modern.py for a shorter training session
+python -c "import main_modern; main_modern.NUM_EPOCHS = 50; exec(open('main_modern.py').read())"
 ```
 
 ### **🎭 Generate Multiple Character Samples**
-```powershell
+```shell
 python -c "
 characters = ['jon snow', 'tyrion', 'daenerys', 'arya', 'cersei']
 from modern_example_usage import quick_generate
 for char in characters:
-    print(f'\n=== {char.upper()} ===')
+    print(f'\\n=== {char.upper()} ===')
     print(quick_generate(f'{char}: ', character=char, max_length=100))
 "
 ```
 
 ### **📊 Complete Analysis Pipeline**
-```powershell
-# 1. Analyze data → 2. Train → 3. Visualize → 4. Generate
-python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset('data/Game_of_Thrones_Script.csv'))" && python main_modern.py && python modern_plot.py && python -c "from modern_example_usage import quick_generate; print(quick_generate('jon snow: ', character='jon snow'))"
+```shell
+# 1. Analyze data -> 2. Train -> 3. Visualize -> 4. Generate
+python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset('data/Game_of_Thrones_Script.csv'))" && \
+python main_modern.py && \
+python modern_plot.py && \
+python -c "from modern_example_usage import quick_generate; print(quick_generate('jon snow: ', character='jon snow'))"
 ```
 
 ---
@@ -223,13 +227,13 @@ python -c "from improved_helperAI import analyze_dataset; print(analyze_dataset(
 | Import errors | `pip install -r requirements.txt` |
 
 ### **📝 Check System Status**
-```powershell
+```shell
 python -c "
 import torch, sys, os
 print(f'Python: {sys.version}')
-print(f'PyTorch: {torch.__version__}') 
+print(f'PyTorch: {torch.__version__}')
 print(f'CUDA: {torch.cuda.is_available()}')
-print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"None\"}')
+print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')
 print(f'Data exists: {os.path.exists(\"data/Game_of_Thrones_Script.csv\")}')
 "
 ```
@@ -240,38 +244,38 @@ print(f'Data exists: {os.path.exists(\"data/Game_of_Thrones_Script.csv\")}')
 
 | Document | Description |
 |----------|-------------|
-| **[NON_PROGRAMMER_GUIDE.md](NON_PROGRAMMER_GUIDE.md)** | Complete beginner's guide |
-| **[CODE_QUALITY_ENHANCEMENTS.md](CODE_QUALITY_ENHANCEMENTS.md)** | Technical improvements list |
-| **[TRAINING_IMPROVEMENTS.md](TRAINING_IMPROVEMENTS.md)** | Training system enhancements |
+| **[NON_PROGRAMMER_GUIDE.md](archive/NON_PROGRAMMER_GUIDE.md)** | Complete beginner's guide |
+| **[CODE_QUALITY_ENHANCEMENTS.md](archive/CODE_QUALITY_ENHANCEMENTS.md)** | Technical improvements list |
+| **[TRAINING_IMPROVEMENTS.md](archive/TRAINING_IMPROVEMENTS.md)** | Training system enhancements |
 
 ---
 
 ## 🎊 Success Indicators
 
 **✅ Training is working when you see:**
-- Decreasing loss values over time
-- Regular checkpoint saves every 10 epochs  
-- Sample generation every 20 epochs showing improvement
-- ETA calculations showing reasonable completion times
+- Decreasing loss values over time.
+- Regular checkpoint saves every 10 epochs.
+- Sample generation every 20 epochs showing improvement.
+- ETA calculations showing reasonable completion times.
 
 **🎭 Good dialogue output looks like:**
-- Character-appropriate language and vocabulary
-- Coherent sentence structure
-- Contextually relevant responses
-- Proper Game of Thrones terminology and themes
+- Character-appropriate language and vocabulary.
+- Coherent sentence structure.
+- Contextually relevant responses.
+- Proper Game of Thrones terminology and themes.
 
 ---
 
 ## 💡 Pro Tips
 
 ### **🚀 Performance Optimization**
-```powershell
+```shell
 # Use multiple workers for faster data loading
 python -c "exec(open('main_modern.py').read().replace('num_workers=2', 'num_workers=4'))"
 ```
 
 ### **🎯 Fine-tune Generation**
-```powershell
+```shell
 # More focused dialogue
 python -c "from modern_example_usage import quick_generate; quick_generate('the night king: ', top_p=0.7, temperature=0.6)"
 
@@ -280,7 +284,7 @@ python -c "from modern_example_usage import quick_generate; quick_generate('tyri
 ```
 
 ### **📊 Advanced Monitoring**
-```powershell
+```shell
 # Monitor GPU usage during training
 nvidia-smi -l 5
 ```

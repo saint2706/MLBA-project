@@ -10,100 +10,100 @@ This project creates an AI that can generate Game of Thrones dialogue! Here's ho
 
 ## 🗂️ Project Structure (What Each File Does)
 
-### 📁 Main Files (The Important Ones):
-- **`main_modern.py`** 🎬 - **START HERE!** The main control center that runs everything
-- **`modern_example_usage.py`** 🚀 - Advanced training with enhanced features (200 epochs)
-- **`improved_helperAI.py`** 🤖 - All the helper functions (the toolbox)
-- **`modern_plot.py`** 📊 - Creates beautiful graphs showing training progress
+### 📁 Main Files (The Important Ones)
+- **`main_modern.py`** 🎬: **START HERE!** The main control center that runs everything.
+- **`modern_example_usage.py`** 🚀: Advanced training with enhanced features (200 epochs).
+- **`improved_helperAI.py`** 🤖: All the helper functions (the toolbox).
+- **`modern_plot.py`** 📊: Creates beautiful graphs showing training progress.
 
-### 📊 Data Files:
-- **`data/Game_of_Thrones_Script.csv`** 📝 - The original Game of Thrones dialogue data
-- **`preprocess_modern.pkl`** 🔄 - Processed data ready for AI training
-- **`modern_script_model.pt`** 🧠 - Your trained AI model (the "brain")
+### 📊 Data Files
+- **`data/Game_of_Thrones_Script.csv`** 📝: The original Game of Thrones dialogue data.
+- **`preprocess_modern.pkl`** 🔄: Processed data ready for AI training.
+- **`modern_script_model.pt`** 🧠: Your trained AI model (the "brain").
 
-### 📈 Results Files:
-- **`training_output.txt`** 📋 - Detailed log of training progress
-- **`*.png`** 📊 - Training progress graphs
-- **`*.html`** 🌐 - Interactive graphs you can explore
+### 📈 Results Files
+- **`training_output.txt`** 📋: Detailed log of training progress.
+- **`*.png`** 📊: Training progress graphs.
+- **`*.html`** 🌐: Interactive graphs you can explore.
 
 ## 🚀 How to Use This Project
 
-### Option 1: Quick Start (Recommended for beginners)
-```bash
+### Option 1: Quick Start (Recommended for Beginners)
+```shell
 python main_modern.py
 ```
 This runs the complete process with reasonable settings (about 2-4 hours).
 
-### Option 2: Extended Training (For best results)
-```bash
+### Option 2: Extended Training (For Best Results)
+```shell
 python modern_example_usage.py
 ```
 This runs enhanced training with 200 epochs (8+ hours, but much better results).
 
 ### Option 3: Just Create Visualizations
-```bash
+```shell
 python modern_plot.py
 ```
 This creates graphs from existing training logs.
 
 ## 📊 Understanding the Results
 
-### 🎯 Training Metrics to Watch:
+### 🎯 Training Metrics to Watch
 
 1. **Loss** 📉 (Most Important!)
-   - **What it means**: How many "mistakes" the AI is making
-   - **Good values**: Starting around 4-5, should drop to 1-2 or lower
-   - **Trend**: Should consistently decrease over time
+   - **What it means**: How many "mistakes" the AI is making.
+   - **Good values**: Starting around 4-5, should drop to 1-2 or lower.
+   - **Trend**: Should consistently decrease over time.
 
 2. **Learning Rate** 📈
-   - **What it means**: How fast the AI is trying to learn
-   - **Behavior**: Usually starts higher and decreases over time
-   - **Don't worry if**: This changes automatically
+   - **What it means**: How fast the AI is trying to learn.
+   - **Behavior**: Usually starts higher and decreases over time.
+   - **Don't worry if**: This changes automatically.
 
 3. **Validation Loss** 🎯
-   - **What it means**: How well the AI works on new, unseen data
-   - **Good sign**: Stays close to training loss
-   - **Warning sign**: Much higher than training loss (overfitting)
+   - **What it means**: How well the AI works on new, unseen data.
+   - **Good sign**: Stays close to training loss.
+   - **Warning sign**: Much higher than training loss (overfitting).
 
-### 📈 Training Phases:
+### 📈 Training Phases
 
-#### 🌱 Early Training (Epochs 1-20):
-- **Loss**: High (3-5)
-- **Output**: Mostly gibberish or repeated words
-- **Normal**: The AI is just starting to learn
+#### 🌱 Early Training (Epochs 1-20)
+- **Loss**: High (3-5).
+- **Output**: Mostly gibberish or repeated words.
+- **Normal**: The AI is just starting to learn.
 
-#### 📚 Middle Training (Epochs 20-100):
-- **Loss**: Decreasing (2-3)
-- **Output**: Real words, some sentence structure
-- **Improvement**: You'll see recognizable patterns
+#### 📚 Middle Training (Epochs 20-100)
+- **Loss**: Decreasing (2-3).
+- **Output**: Real words, some sentence structure.
+- **Improvement**: You'll see recognizable patterns.
 
-#### 🎯 Late Training (Epochs 100-200):
-- **Loss**: Low (1-2)
-- **Output**: Coherent dialogue that sounds like Game of Thrones
-- **Success**: Character-specific speech patterns emerge
+#### 🎯 Late Training (Epochs 100-200)
+- **Loss**: Low (1-2).
+- **Output**: Coherent dialogue that sounds like Game of Thrones.
+- **Success**: Character-specific speech patterns emerge.
 
 ## 🔧 Common Issues and Solutions
 
 ### ❌ "ModuleNotFoundError: No module named 'torch'"
-**Solution**: Install required packages:
-```bash
+**Solution**: Install required packages.
+```shell
 pip install -r requirements.txt
 ```
 
 ### ❌ "CUDA out of memory"
-**Solution**: Reduce batch size in the configuration:
-- Open `main_modern.py` 
-- Change `BATCH_SIZE = 16` to `BATCH_SIZE = 8` or `BATCH_SIZE = 4`
+**Solution**: Reduce batch size in the configuration.
+- Open `main_modern.py`.
+- Change `BATCH_SIZE = 16` to `BATCH_SIZE = 8` or `BATCH_SIZE = 4`.
 
 ### ❌ "Training is taking too long"
-**Solution**: Reduce epochs for testing:
-- Change `NUM_EPOCHS = 100` to `NUM_EPOCHS = 20`
+**Solution**: Reduce epochs for testing.
+- Change `NUM_EPOCHS = 100` to `NUM_EPOCHS = 20`.
 
 ### ❌ "Generated text is still gibberish after training"
 **Solutions**:
-1. Train for more epochs (200+ recommended)
-2. Check that loss is actually decreasing
-3. Ensure you have enough training data
+1. Train for more epochs (200+ recommended).
+2. Check that loss is actually decreasing.
+3. Ensure you have enough training data.
 
 ## 🎭 Customizing Text Generation
 
