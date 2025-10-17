@@ -154,6 +154,20 @@ MLBA-project/
 - `scripts/` — targeted validation utilities and debugging helpers.
 - `data/` — the curated Game of Thrones dialogue dataset used for training.
 
+## 🛡️ License
+
+This project is released under the permissive [MIT License](LICENSE). The MIT terms
+cover the code in this repository, enabling reuse in commercial and open-source
+settings with attribution.
+
+Third-party assets bundled here, such as `data/Game_of_Thrones_Script.csv`, are
+compiled by Abhijeet Anand (Kaggle user `abhi3868`). They remain subject to the
+license and attribution requirements published on the
+[Kaggle dataset page](https://www.kaggle.com/datasets/abhi3868/game-of-thrones-script-all-seasons).
+Ensure your usage of the dataset complies with those terms—in particular, retain
+attribution to the original compiler when sharing derivatives—while the
+repository’s source code continues to be governed by MIT.
+
 ## 🛠️ Troubleshooting
 
 - **Import errors** – ensure you ran `pip install -e .` so Python can locate the
