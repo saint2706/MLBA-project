@@ -1,0 +1,107 @@
+# ================================================================
+# 🎬 Game of Thrones AI Script Generator - Requirements
+# ================================================================
+# Optimized dependencies for the best performance and compatibility
+# Last updated: August 2025
+
+# ================================================================
+# 🔥 Core Deep Learning Framework
+# ================================================================
+# PyTorch 2.4+ with CUDA support for GPU acceleration
+# Automatically detects and installs the correct CUDA version
+
+# CUDA 12.1+ (Recommended for RTX 40-series, RTX 30-series)
+torch>=2.4.0
+torchvision>=0.19.0
+torchaudio>=2.4.0
+
+# Alternative manual installation commands:
+# For CUDA 12.1: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# For CUDA 11.8: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# For CPU only:  pip install torch torchvision torchaudio
+
+# ================================================================
+# 🤖 Natural Language Processing & AI
+# ================================================================
+transformers>=4.44.0          # Hugging Face transformers for GPT-2 tokenization
+datasets>=2.20.0              # Dataset loading and preprocessing
+tokenizers>=0.19.1            # Fast tokenization (auto-installed with transformers)
+sentencepiece>=0.2.0          # Advanced tokenization support
+
+# ================================================================
+# 📊 Data Science & Processing
+# ================================================================
+pandas>=2.2.0                 # Data manipulation and CSV/Excel loading
+numpy>=1.26.0                 # Numerical computing foundation
+scipy>=1.13.0                 # Scientific computing utilities
+scikit-learn>=1.5.0           # Machine learning utilities (optional but useful)
+
+# ================================================================
+# 📈 Visualization & Plotting
+# ================================================================
+plotly>=5.22.0                # Interactive plotting for training metrics
+kaleido>=0.2.1                # Static image export for Plotly charts
+matplotlib>=3.8.0             # Additional plotting capabilities
+seaborn>=0.13.0               # Statistical visualization
+
+# ================================================================
+# 🔧 Development & Utilities
+# ================================================================
+tqdm>=4.66.0                  # Progress bars for training loops
+pytest>=8.2.0                # Testing framework
+jupyter>=1.0.0                # Jupyter notebook support (optional)
+ipywidgets>=8.1.0             # Interactive widgets for notebooks
+
+# ================================================================
+# 💾 File & Data Handling
+# ================================================================
+openpyxl>=3.1.0               # Excel file support (.xlsx)
+xlrd>=2.0.0                   # Excel file support (.xls)
+beautifulsoup4>=4.12.0        # HTML/XML parsing (if needed)
+requests>=2.32.0              # HTTP requests for data downloading
+
+# ================================================================
+# 🚀 Performance & Optimization
+# ================================================================
+# These packages can significantly improve training speed
+accelerate>=0.33.0            # Hugging Face acceleration library
+psutil>=6.0.0                 # System resource monitoring
+memory-profiler>=0.61.0       # Memory usage profiling (debugging)
+
+# ================================================================
+# 🔒 Version Compatibility Notes
+# ================================================================
+# - Python 3.10-3.11 recommended (avoid 3.12+ until full PyTorch support)
+# - CUDA 12.1+ recommended for newest GPUs
+# - For older GPUs (GTX 10-series), CUDA 11.8 may work better
+# - All packages tested on Windows 11, Ubuntu 22.04, and macOS Ventura
+
+# ================================================================
+# 📦 Optional Packages (uncomment if needed)
+# ================================================================
+# tensorboard>=2.17.0         # TensorBoard logging and visualization
+# wandb>=0.17.0               # Weights & Biases experiment tracking  
+# mlflow>=2.15.0              # MLflow experiment tracking
+# streamlit>=1.37.0           # Web interface for the AI (advanced users)
+# fastapi>=0.112.0            # REST API creation (advanced users)
+# uvicorn>=0.30.0             # ASGI server for FastAPI
+
+# ================================================================
+# 🐛 Known Issues & Solutions
+# ================================================================
+# If you encounter issues:
+# 1. CUDA out of memory -> Reduce BATCH_SIZE in main_modern.py
+# 2. Import errors -> Try: pip install --upgrade pip setuptools wheel
+# 3. Slow installation -> Use: pip install --upgrade pip
+# 4. Version conflicts -> Create fresh virtual environment
+# 5. GPU not detected -> Check CUDA drivers: nvidia-smi
+
+# ================================================================
+# 🚀 Installation Tips
+# ================================================================
+# Recommended installation process:
+# 1. python -m venv venv
+# 2. venv\Scripts\activate (Windows) or source venv/bin/activate (Linux/Mac)
+# 3. pip install --upgrade pip setuptools wheel
+# 4. pip install -r requirements.txt
+# 5. python -c "import torch; print(torch.cuda.is_available())"

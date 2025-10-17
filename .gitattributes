@@ -1,0 +1,2 @@
+data/Game_of_Thrones_Script.csv filter=lfs diff=lfs merge=lfs -text
+data/*.xlsx filter=lfs diff=lfs merge=lfs -text
