@@ -40,6 +40,49 @@ These commands verify that the project package resolves correctly and that the b
 Game of Thrones dialogue dataset is reachable. The smoke test does not launch a long
 training run, making it safe to execute during setup.
 
+## 🌿 Branch Workflow
+
+Two sibling branches host the historical pipelines that inspired this consolidated
+layout:
+
+- `version1` – the original local-only workflow.
+- `colab-version` – a notebook-friendly adaptation tailored for Google Colab.
+
+Create feature branches from whichever base you are iterating on and keep them in sync
+with `git pull` before committing. Switch branches with `git checkout <branch-name>`.
+
+## 📦 Dataset
+
+Download **Game_of_Thrones_Script.csv** from Kaggle and place it in the repository before
+running any scripts:
+
+- Source: [Game of Thrones Script (All Seasons) on Kaggle](https://www.kaggle.com/datasets/abhi3868/game-of-thrones-script-all-seasons)
+- Local path: `data/Game_of_Thrones_Script.csv`
+
+### Branch-specific placement
+
+- **`version1`** – the legacy scripts load the file from `data/Game_of_Thrones_Script.csv`
+  relative to the project root. Ensure the `data/` directory exists and copy the CSV
+  there before executing helper scripts.
+- **`colab-version`** – after cloning the repository in Google Colab (e.g., under
+  `/content/MLBA-project`), upload the dataset to `/content/MLBA-project/data/` so the
+  notebooks and CLI calls resolve the same relative path.
+
+### Required schema & encoding
+
+- The CSV must expose a character column (`Character`, `Name`, `Speaker`, or `Who`) and a
+  dialogue column (`Dialogue`, `Sentence`, `Line`, or `Text`). The preprocessing utilities
+  standardize these to the canonical `Character` and `Dialogue` headers.
+- Save the file with UTF-8 encoding to avoid Unicode decoding issues on non-Unix hosts.
+- Remove any empty trailing rows so the loaders can drop `NaN` entries cleanly.
+
+### Cleanup & licensing notes
+
+- No manual text normalization is required beyond verifying that each row has a character
+  and line of dialogue—the helper scripts trim whitespace automatically.
+- Respect the license posted on the Kaggle dataset page and include attribution to the
+  dataset author when redistributing or publishing generated results.
+
 ## 🧠 Training & Generation
 
 Choose whichever entry point fits your workflow:
