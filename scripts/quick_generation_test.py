@@ -10,11 +10,77 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 import torch
+from torch import nn
 from got_script_generator.modern_example_usage import (
     ModernScriptRNN,
     ModernGenerator,
 )
-from got_script_generator.improved_helperAI import load_modern_preprocess
+from got_script_generator.improved_helperAI import load_modern_preprocess, SPECIAL_WORDS
+
+
+class _DummyModel(nn.Module):
+    """Minimal model to deterministically output a punctuation placeholder."""
+
+    def __init__(self, vocab_size: int):
+        super().__init__()
+        self.vocab_size = vocab_size
+        # Register a parameter so `parameters()` yields a tensor with device info.
+        self.dummy_weight = nn.Parameter(torch.zeros(1))
+
+    def forward(self, input_seq, hidden, character_ids=None):
+        batch_size, seq_len = input_seq.shape
+        device = input_seq.device
+        logits = torch.full(
+            (batch_size, seq_len, self.vocab_size),
+            -float("inf"),
+            device=device,
+        )
+        # Always prefer token index 1 so we can test custom token decoding.
+        logits[:, -1, 1] = 10.0
+        return logits, hidden
+
+    def init_hidden(self, batch_size, device="cpu"):
+        return (
+            torch.zeros(1, batch_size, 1, device=device),
+            torch.zeros(1, batch_size, 1, device=device),
+        )
+
+
+def test_generate_decodes_custom_tokens():
+    """Ensure nucleus sampling converts custom punctuation tokens back to symbols."""
+
+    vocab_to_int = {
+        "hello": 0,
+        SPECIAL_WORDS["UNKNOWN"]: 2,
+    }
+    int_to_vocab = {
+        0: "hello",
+        1: "||period||",
+        2: SPECIAL_WORDS["UNKNOWN"],
+    }
+
+    generator = ModernGenerator(
+        model=_DummyModel(vocab_size=3),
+        vocab_to_int=vocab_to_int,
+        int_to_vocab=int_to_vocab,
+        character_vocab={},
+        tokenizer=None,
+    )
+
+    torch.manual_seed(0)
+    output = generator.generate_nucleus_sampling(
+        seed_text="hello",
+        max_length=1,
+        top_p=0.9,
+        temperature=1.0,
+    )
+
+    assert "||" not in output, "Custom token placeholders should be decoded"
+    assert output.strip().endswith("."), "Decoded text should include punctuation symbol"
+
+    print("✅ Custom token decoding test passed!")
+    return True
+
 
 def test_generation_with_fix():
     """Test if trained model + decode fix produces readable output"""
@@ -111,4 +177,5 @@ def test_generation_with_fix():
         return False
 
 if __name__ == "__main__":
+    test_generate_decodes_custom_tokens()
     test_generation_with_fix()
