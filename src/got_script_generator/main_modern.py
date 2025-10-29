@@ -630,7 +630,7 @@ if __name__ == '__main__':
 
     print("\n📊 Creating training progress visualizations...")
     try:
-        from modern_plot import quick_dashboard
+        from .modern_plot import quick_dashboard
         quick_dashboard()
         print("✅ Training visualizations created! Check the generated .html files")
     except Exception as e:
