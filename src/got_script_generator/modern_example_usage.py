@@ -638,6 +638,7 @@ class ModernGenerator:
             # fallback for basic tokenizer - convert tokens to words using int_to_vocab
             words = [self.int_to_vocab.get(t, "<UNK>") for t in generated_tokens]
             text = " ".join(words)
+            text = self.decode_custom_tokens(text).strip()
         else:
             # Use proper decoding for transformers tokenizer
             text = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)  # type: ignore
