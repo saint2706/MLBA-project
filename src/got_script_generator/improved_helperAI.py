@@ -442,8 +442,19 @@ class SequenceDataset(Dataset):
             elif len(seq) > 1:
                 self.filtered_sequences.append(seq)
         
-        logger.info(f"Dataset created with {len(self.filtered_sequences)} valid sequences")
-        logger.info(f"Max sequence length: {max([len(seq) for seq in self.filtered_sequences])}")
+        num_sequences = len(self.filtered_sequences)
+        logger.info(f"Dataset created with {num_sequences} valid sequences")
+
+        if num_sequences == 0:
+            message = (
+                "No valid sequences available after filtering; cannot create SequenceDataset."
+            )
+            logger.warning(message)
+            raise ValueError(message)
+
+        logger.info(
+            f"Max sequence length: {max([len(seq) for seq in self.filtered_sequences])}"
+        )
         
     def __len__(self):
         return len(self.filtered_sequences)
